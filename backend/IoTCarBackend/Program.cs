@@ -6,18 +6,18 @@ builder.Services.AddControllers();
 builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAngularApp", policy =>
-    {
-        policy.WithOrigins("http://localhost:4200", "https://iotcarc.netlify.app/")
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
-    });
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowNetlify", builder =>
+        builder
+            .WithOrigins("https://iotcarc.netlify.app") // tvoj Netlify FE domen
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+    );
 });
 
 var app = builder.Build();
+app.UseCors("AllowNetlify");
 app.UseSwagger();
 app.UseSwaggerUI();
 
@@ -32,6 +32,6 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowAngularApp");
 app.UseAuthorization();
 app.MapControllers();
-app.MapHub<CarHub>("/carhub");
+app.MapHub<CarHub>("/carhub").RequireCors("AllowNetlify");
 app.Run();
  
