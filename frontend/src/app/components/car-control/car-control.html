@@ -1,1 +1,69 @@
-<p>car-control works!</p>
+<div class="dashboard">
+  <!-- Status bar -->
+  <div class="status-bar">
+    <div class="battery-status">
+      <mat-icon>battery_charging_full</mat-icon>
+      <span>{{ batteryPercent }}%</span>
+    </div>
+    <div class="connection-status center-status">
+      <mat-icon [class.connected]="isConnected" [class.disconnected]="!isConnected">
+        {{ isConnected ? 'wifi' : 'wifi_off' }}
+      </mat-icon>
+      <span>{{ isConnected ? 'Povezan' : 'Diskonektovan' }}</span>
+    </div>
+    <div class="telemetry-info">
+      <span>
+        <mat-icon>speed</mat-icon> {{ speed }} km/h
+      </span>
+      <span>
+        <mat-icon>bolt</mat-icon> {{ current }}A
+      </span>
+    </div>
+  </div>
+
+  <div class="controls-layout">
+    <!-- Left/Right -->
+    <div class="side-controls">
+      <div class="row-controls">
+        <button mat-fab color="primary"
+                (mousedown)="onLeft()" (mouseup)="onStop()" (touchstart)="onLeft()" (touchend)="onStop()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <button mat-fab color="primary"
+                (mousedown)="onRight()" (mouseup)="onStop()" (touchstart)="onRight()" (touchend)="onStop()">
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Centar (telemetry i utility dugmad) -->
+    <div class="center-zone">
+      <div class="telemetry-display">
+        <div class="rpm-gauge">RPM: {{ rpm }}</div>
+        <div class="speed-display">{{ speed }} <span>km/h</span></div>
+      </div>
+      <div class="info-controls">
+        <button mat-fab color="primary" (click)="onHorn()" [class.active]="hornActive">
+          <mat-icon>notifications</mat-icon>
+        </button>
+        <button mat-fab color="accent" (click)="onLightsToggle()" [class.active]="lightsOn">
+          <mat-icon>{{ lightsOn ? 'lightbulb' : 'lightbulb_outline' }}</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Forward/Backward -->
+    <div class="side-controls">
+      <div class="column-controls">
+        <button mat-fab color="primary"
+                (mousedown)="onForward()" (mouseup)="onStop()" (touchstart)="onForward()" (touchend)="onStop()">
+          <mat-icon>arrow_upward</mat-icon>
+        </button>
+        <button mat-fab color="primary"
+                (mousedown)="onBackward()" (mouseup)="onStop()" (touchstart)="onBackward()" (touchend)="onStop()">
+          <mat-icon>arrow_downward</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
