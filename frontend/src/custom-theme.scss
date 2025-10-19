@@ -1,0 +1,16 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+// Use prebuilt Indigo-Pink theme
+$my-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+    tertiary: mat.$yellow-palette,
+  ),
+));
+
+:root {
+  @include mat.all-component-themes($my-theme);
+}

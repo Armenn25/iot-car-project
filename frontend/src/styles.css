@@ -1,1 +1,53 @@
-/* You can add global styles to this file, and also import other style files */
+/* ============================================
+   IoT Car Control - Global Styles
+   ============================================ */
+
+/* Import custom Angular Material theme */
+@import './custom-theme.scss';
+
+/* Reset defaults */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* Eliminira scroll na mobilnom */
+}
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  /* Automotive-style gradient pozadina (tamno plava) */
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+}
+
+/* Material Typography klasa */
+.mat-typography {
+  font-family: 'Roboto', sans-serif;
+}
+
+/* ============================================
+   Landscape Mode Warning
+   ============================================ */
+@media (orientation: portrait) {
+  body::before {
+    content: "🔄 Molimo okreni uređaj vodoravno";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 2rem 3rem;
+    border-radius: 16px;
+    font-size: 1.3rem;
+    font-weight: 500;
+    z-index: 9999;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  }
+}
