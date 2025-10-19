@@ -18,6 +18,9 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -25,8 +28,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-app.UseHttpsRedirection();
+
 app.UseCors("AllowAngularApp");
 app.UseAuthorization();
 app.MapControllers();

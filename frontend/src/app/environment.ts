@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
-  apiUrl: 'https://localhost:7237',
-  signalRHub: 'https://localhost:7237/carhub'
+  production: true,
+  apiUrl: 'http://20.199.88.208',          // <-- ovo stavi na IP tvoje VM!
+  signalRHub: 'http://20.199.88.208/carhub' // <-- i ovdje, koristi isti IP i ime SignalR huba
 };
