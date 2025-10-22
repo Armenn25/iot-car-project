@@ -1,14 +1,25 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using IoTCarBackend.Models;
+using System.Data;
+using Microsoft.Extensions.Logging;
 
 namespace IoTCarBackend.Hubs
 {
     public class CarHub : Hub
     {
+        private readonly ILogger<CarHub> _logger;
+
+        // Konstruktor DI za ILogger
+        public CarHub(ILogger<CarHub> logger)
+        {
+            _logger = logger;
+        }
+
         public async Task SendCommandToESP32(CarCommand command)
         {
             await Clients.Group("esp32-devices").SendAsync("ReceiveCommand", command);
             await Clients.Caller.SendAsync("CommandConfirmed", true);
+            _logger.LogInformation($"Komanda primljena: {command.CommandType}, vrijednost: {command.Value}");
         }
 
         public async Task SendTelemetryData(TelemetryData telemetry)
