@@ -33,11 +33,6 @@ Projekat demonstrira **full-stack razvoj**, spajajući hardver, backend logiku i
 
 Sistem je dizajniran po troslojnoj arhitekturi koja osigurava modularnost, skalabilnost i lako održavanje. Svaka komponenta ima jasno definisanu ulogu.
 
-<p align="center">
-  <!-- Ovdje možete dodati dijagram arhitekture ako ga imate -->
-  <img src="assets/dijagram.png" alt="Arhitektura Projekta" width="700"/> 
-</p>
-
 ### 🚗 1. Embedded Sistem (ESP32 / Arduino)
 
 "Srce" automobila je **ESP-WROOM-32 mikrokontroler**, programiran koristeći **Arduino framework (C++)**. Ova komponenta je zadužena za sve fizičke operacije i interakciju sa senzorima.
