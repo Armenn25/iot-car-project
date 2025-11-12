@@ -12,13 +12,12 @@
 
 <p align="center">
   <!-- Bedževi za status projekta. Automatski se ažuriraju. -->
-  <img src="https://img.shields.io/github/languages/count/Armenn25/iot-car-project" alt="Broj korištenih jezika">
-  <img src="https://img.shields.io/github/languages/top/Armenn25/iot-car-project" alt="Glavni jezik">
-  <img src="https://img.shields.io/github/last-commit/Armenn25/iot-car-project" alt="Posljednji commit">
-  <img src="https://img.shields.io/github/repo-size/Armenn25/iot-car-project" alt="Veličina repozitorija">
-  <img src="https://img.shields.io/badge/.NET-v8.0-blue" alt=".NET Verzija">
-  <img src="https://img.shields.io/badge/Angular-v17-red" alt="Angular Verzija">
-  <img src="https://img.shields.io/badge/License-MIT-yellow" alt="Licenca">
+<img src="https://img.shields.io/badge/.NET-v8.0-blue" alt=".NET Verzija">
+<img src="https://img.shields.io/badge/Angular-v17-red" alt="Angular Verzija">
+<img src="https://img.shields.io/badge/License-MIT-yellow" alt="Licenca">
+<img src="https://img.shields.io/badge/Backend-.NET_Core-blue" alt="Backend tehnologija">
+<img src="https://img.shields.io/badge/Frontend-Angular-red" alt="Frontend tehnologija">
+
 </p>
 
 ---
