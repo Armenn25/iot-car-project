@@ -1,26 +1,40 @@
 using IoTCarBackend.Hubs;
+using IoTCarBackend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = true;
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(options => {
-    options.AddPolicy("AllowNetlify", builder =>
-        builder
-            .WithOrigins("https://iotcarc.netlify.app") // tvoj Netlify FE domen
+builder.Services.AddSingleton<ITelemetryCache, TelemetryCache>();
+
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DefaultCorsPolicy", policyBuilder =>
+    {
+        if (allowedOrigins.Length > 0)
+        {
+            policyBuilder.WithOrigins(allowedOrigins);
+        }
+        else
+        {
+            policyBuilder.AllowAnyOrigin();
+        }
+
+        policyBuilder
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowCredentials()
-    );
+            .AllowCredentials();
+    });
 });
 
 var app = builder.Build();
-app.UseCors("AllowNetlify");
-app.UseSwagger();
-app.UseSwaggerUI();
-
 
 if (app.Environment.IsDevelopment())
 {
@@ -28,10 +42,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
-app.UseCors("AllowAngularApp");
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseCors("DefaultCorsPolicy");
 app.UseAuthorization();
 app.MapControllers();
-app.MapHub<CarHub>("/carhub").RequireCors("AllowNetlify");
+app.MapHub<CarHub>("/carhub").RequireCors("DefaultCorsPolicy");
 app.Run();
- 
