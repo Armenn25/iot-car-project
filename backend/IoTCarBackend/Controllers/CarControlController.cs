@@ -1,43 +1,69 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
+using System.ComponentModel.DataAnnotations;
 using IoTCarBackend.Hubs;
 using IoTCarBackend.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
-namespace IoTCarBackend.Controllers
+namespace IoTCarBackend.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class CarControlController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CarControlController : ControllerBase
+    private static readonly HashSet<string> AllowedDirections =
+        new(StringComparer.OrdinalIgnoreCase) { "forward", "backward", "left", "right", "stop" };
+
+    private readonly IHubContext<CarHub> _hubContext;
+
+    public CarControlController(IHubContext<CarHub> hubContext)
     {
-        private readonly IHubContext<CarHub> _hubContext;
+        _hubContext = hubContext;
+    }
 
-        public CarControlController(IHubContext<CarHub> hubContext)
+    [HttpPost("move")]
+    public async Task<IActionResult> Move([FromBody] MoveRequest request)
+    {
+        if (!AllowedDirections.Contains(request.Direction))
         {
-            _hubContext = hubContext;
+            return BadRequest(new { Message = $"Nepoznat smjer: {request.Direction}" });
         }
 
-        [HttpPost("move")]
-        public async Task<IActionResult> Move([FromBody] string direction)
+        var command = new CarCommand { CommandType = "move", Value = request.Direction.ToLowerInvariant() };
+        await DispatchCommandAsync(command);
+        return Ok(new { Success = true, Message = $"Auto se kreće: {request.Direction}" });
+    }
+
+    [HttpPost("lights")]
+    public async Task<IActionResult> ControlLights([FromBody] ToggleRequest request)
+    {
+        var state = request.State.ToLowerInvariant();
+        if (state is not ("on" or "off"))
         {
-            var command = new CarCommand { CommandType = "move", Value = direction.ToLower() };
-            await _hubContext.Clients.Group("esp32-devices").SendAsync("ReceiveCommand", command);
-            return Ok(new { Success = true, Message = $"Auto se kreće: {direction}" });
+            return BadRequest(new { Message = "Stanje svjetala mora biti 'on' ili 'off'." });
         }
 
-        [HttpPost("lights")]
-        public async Task<IActionResult> ControlLights([FromBody] string state)
-        {
-            var command = new CarCommand { CommandType = "lights", Value = state.ToLower() };
-            await _hubContext.Clients.Group("esp32-devices").SendAsync("ReceiveCommand", command);
-            return Ok(new { Success = true, Message = $"Svjetla: {state}" });
-        }
+        var command = new CarCommand { CommandType = "lights", Value = state };
+        await DispatchCommandAsync(command);
+        return Ok(new { Success = true, Message = $"Svjetla: {state}" });
+    }
 
-        [HttpPost("horn")]
-        public async Task<IActionResult> ActivateHorn([FromBody] int? duration)
-        {
-            var command = new CarCommand { CommandType = "horn", Value = "on", Duration = duration ?? 1000 };
-            await _hubContext.Clients.Group("esp32-devices").SendAsync("ReceiveCommand", command);
-            return Ok(new { Success = true, Message = "Svirena aktivirana" });
-        }
+    [HttpPost("horn")]
+    public async Task<IActionResult> ActivateHorn([FromBody] HornRequest request)
+    {
+        var duration = request.Duration is > 0 ? request.Duration.Value : 1000;
+        var command = new CarCommand { CommandType = "horn", Value = "on", Duration = duration };
+        await DispatchCommandAsync(command);
+        return Ok(new { Success = true, Message = "Sirena aktivirana" });
+    }
+
+    private Task DispatchCommandAsync(CarCommand command)
+    {
+        return _hubContext.Clients.Group(SignalRGroups.Esp32Devices).SendAsync("ReceiveCommand", command);
     }
 }
+
+public sealed record MoveRequest([property: Required] string Direction);
+
+public sealed record ToggleRequest([property: Required] string State);
+
+public sealed record HornRequest(int? Duration);
