@@ -26,11 +26,11 @@
     <div class="side-controls">
       <div class="row-controls">
         <button mat-fab color="primary"
-                (mousedown)="onLeft()" (touchstart)="onLeft()" >
+                (mousedown)="onLeft()" (mouseup)="onStop()" (touchstart)="onLeft()" (touchend)="onStop()">
           <mat-icon>arrow_back</mat-icon>
         </button>
         <button mat-fab color="primary"
-                (mousedown)="onRight()" (touchstart)="onRight()">
+                (mousedown)="onRight()" (mouseup)="onStop()" (touchstart)="onRight()" (touchend)="onStop()">
           <mat-icon>arrow_forward</mat-icon>
         </button>
       </div>
