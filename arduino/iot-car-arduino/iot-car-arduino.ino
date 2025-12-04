@@ -925,7 +925,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
                         else stopMotors();
                     } else if (strcmp(cmdType, "light") == 0) 
                         setLights(strcmp(val, "on") == 0);
-                                    
+                }              
             }
             break;
 
