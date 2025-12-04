@@ -138,18 +138,3 @@ button.active {
   .telemetry-display { padding: 0.7rem 0.7rem; }
   .center-zone { gap: 0.8rem; }
 }
-
-/* Police button pulse (visual feedback) */
-@keyframes police-pulse {
-  0%, 100% { transform: scale(1); box-shadow: none; }
-  50% { transform: scale(1.08); box-shadow: 0 0 14px rgba(255,0,0,0.6); }
-}
-
-button.mat-mdc-fab[aria-pressed="true"], button[mat-fab].active {
-  /* keep existing active look */
-}
-
-/* Apply pulse when policeLights button is active */
-button.mat-mdc-fab[color="warn"].active {
-  animation: police-pulse 0.6s infinite;
-}

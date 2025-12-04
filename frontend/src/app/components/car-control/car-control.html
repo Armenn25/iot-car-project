@@ -49,10 +49,6 @@
         <button mat-fab color="accent" (click)="onLightsToggle()" [class.active]="lightsOn">
           <mat-icon>{{ lightsOn ? 'lightbulb' : 'lightbulb_outline' }}</mat-icon>
         </button>
-        <!-- Police lights button: toggles police flashing sequence on ESP32 -->
-        <button mat-fab color="warn" (click)="onPoliceLightsToggle()" [class.active]="policeLightsOn">
-          <mat-icon>{{ policeLightsOn ? 'beenhere' : 'panorama_fish_eye' }}</mat-icon>
-        </button>
       </div>
     </div>
 

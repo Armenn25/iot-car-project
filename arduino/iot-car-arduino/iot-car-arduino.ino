@@ -64,10 +64,6 @@ float battery_mAhRemaining = BATTERY_CAPACITY_mAh;
 int currentPwmValue = 0;
 bool isReversing = false;
 bool lightsOn = false;
-bool policeMode = false;
-unsigned long lastPoliceBlink = 0;
-const long policeBlinkInterval = 300;  // 300ms za svaki LED
-int policeState = 0;  // 0=front, 1=rear, 2=front, 3=all off
 
 // --- Objects ---
 WebSocketsClient webSocket;
@@ -192,7 +188,6 @@ void loop() {
     server.handleClient();
     calculateRpmAndSpeed();
     updateLEDStatus();
-    handlePoliceLights();
     
     // Ako smo povezani na WiFi, rukovodimo WebSocket-om
     if(isConnectedToWiFi) {
@@ -929,16 +924,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
                         else if (strcmp(val, "right") == 0) turnRight();
                         else stopMotors();
                     } else if (strcmp(cmdType, "light") == 0) {
-                        if (strcmp(val, "police") == 0) {
-                            policeMode = !policeMode;
-                            if (!policeMode) {
-                                digitalWrite(frontLedPin, LOW);
-                                digitalWrite(reverseLedPin, LOW);
-                            }
-                        } else {
-                            policeMode = false;
-                            setLights(strcmp(val, "on") == 0);
-                        }
+                        setLights(strcmp(val, "on") == 0);
                     }
                 }
             }
@@ -984,36 +970,6 @@ void turnLeft() {
 
 void turnRight() {
     servo.write(135);
-}
-
-void handlePoliceLights() {
-    if (!policeMode) return;
-    
-    unsigned long now = millis();
-    if (now - lastPoliceBlink < policeBlinkInterval) return;
-    
-    lastPoliceBlink = now;
-    policeState = (policeState + 1) % 4;
-    
-    // Redoslijed: front ON, front OFF, rear ON, rear OFF
-    switch (policeState) {
-        case 0:  // Front ON
-            digitalWrite(frontLedPin, HIGH);
-            digitalWrite(reverseLedPin, LOW);
-            break;
-        case 1:  // Front OFF
-            digitalWrite(frontLedPin, LOW);
-            digitalWrite(reverseLedPin, LOW);
-            break;
-        case 2:  // Rear ON
-            digitalWrite(frontLedPin, LOW);
-            digitalWrite(reverseLedPin, HIGH);
-            break;
-        case 3:  // Rear OFF
-            digitalWrite(frontLedPin, LOW);
-            digitalWrite(reverseLedPin, LOW);
-            break;
-    }
 }
 
 void setLights(bool on) {
