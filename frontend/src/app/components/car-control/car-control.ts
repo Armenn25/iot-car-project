@@ -22,6 +22,9 @@ export class CarControlComponent implements OnInit {
   current = 0.0;
   lightsOn = false;
   hornActive = false;
+  policeLightsOn = false;
+  private policeInterval: any = null;
+  private policeToggleState = false;
 
   constructor(private signalR: SignalrService) {}
 
@@ -78,6 +81,26 @@ export class CarControlComponent implements OnInit {
   onLightsToggle() {
     this.lightsOn = !this.lightsOn;
     this.sendCarCommand('light', this.lightsOn ? 'on' : 'off');
+  }
+
+  onPoliceLightsToggle() {
+    this.policeLightsOn = !this.policeLightsOn;
+
+    if (this.policeLightsOn) {
+      // start sending alternating on/off commands to backend (300ms interval)
+      this.policeToggleState = false;
+      this.policeInterval = setInterval(() => {
+        this.policeToggleState = !this.policeToggleState;
+        this.sendCarCommand('light', this.policeToggleState ? 'on' : 'off');
+      }, 300);
+    } else {
+      // stop flashing and ensure lights off
+      if (this.policeInterval) {
+        clearInterval(this.policeInterval);
+        this.policeInterval = null;
+      }
+      this.sendCarCommand('light', 'off');
+    }
   }
 
   // Helper za slanje komandi backendu
