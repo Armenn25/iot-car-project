@@ -920,12 +920,13 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
                     if (strcmp(cmdType, "move") == 0) {
                         if (strcmp(val, "forward") == 0) goForward(250);
                         else if (strcmp(val, "backward") == 0) goBackward(250);
-                        else if (strcmp(val, "left") == 0) animateServo();
-                        else if (strcmp(val, "right") == 0) animateServo();
+                        else if (strcmp(val, "left") == 0) turnLeft();
+                        else if (strcmp(val, "right") == 0) turnRight();
                         else stopMotors();
-                    } else if (strcmp(cmdType, "light") == 0) 
+                    } else if (strcmp(cmdType, "light") == 0) {
                         setLights(strcmp(val, "on") == 0);
-                }              
+                    }
+                }
             }
             break;
 
@@ -975,11 +976,3 @@ void setLights(bool on) {
     lightsOn = on;
     digitalWrite(frontLedPin, on);
 }
-
-void animateServo() {
-                    servo.write(45); // lijevo
-                    delay(400);
-                    servo.write(135); // desno
-                    delay(400);
-                    servo.write(90); // sredina
-                }

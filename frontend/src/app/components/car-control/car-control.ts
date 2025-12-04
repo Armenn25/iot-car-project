@@ -80,10 +80,6 @@ export class CarControlComponent implements OnInit {
     this.sendCarCommand('light', this.lightsOn ? 'on' : 'off');
   }
 
-  onServoAnimation() {
-    this.sendCarCommand('move', 'left');
-  }
-
   // Helper za slanje komandi backendu
   private sendCarCommand(commandType: string, value: string) {
     this.signalR.sendCommand({
