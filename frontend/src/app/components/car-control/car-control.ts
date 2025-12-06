@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 
-// Dodaj import servisa
+
 import { SignalrService, TelemetryData } from '../../services/signalr';
 
 @Component({
@@ -14,7 +14,6 @@ import { SignalrService, TelemetryData } from '../../services/signalr';
   styleUrl: './car-control.css'
 })
 export class CarControlComponent implements OnInit {
-  // State za prikaz u UI (preuzima se iz SignalR servisa)
   isConnected = false;
   batteryPercent = 0;
   speed = 0;
@@ -36,7 +35,6 @@ export class CarControlComponent implements OnInit {
         this.current = data.currentConsumption;
         this.speed = data.speed;
         this.rpm = data.motorRpm;
-        // timestamp ti je dostupan u data.timestamp
       }
     });
 
